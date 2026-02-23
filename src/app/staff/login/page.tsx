@@ -6,26 +6,27 @@ import Image from 'next/image';
 export default function StaffLogin() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e?.preventDefault?.();
+    setError('');
     setLoading(true);
     try {
       const res = await fetch('/api/staff/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ email: form.email.trim(), password: form.password }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.token) {
         localStorage.setItem('staffToken', data.token);
-        // Short delay so storage is committed before navigation
         setTimeout(() => {
           window.location.replace('/staff/dashboard');
         }, 50);
         return;
       }
-      alert(data.error || 'Invalid credentials');
+      setError(data.error || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -57,6 +58,11 @@ export default function StaffLogin() {
             autoComplete="current-password"
             required
           />
+          {error && (
+            <p className="mb-4 text-sm text-red-600" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="submit"
             disabled={loading}
@@ -71,6 +77,9 @@ export default function StaffLogin() {
           <a href="/staff/signup" className="font-semibold text-[var(--kpop-purple)] hover:underline">
             Create one
           </a>
+        </p>
+        <p className="mt-2 text-center text-xs text-[var(--muted)]">
+          After first deploy, run <code className="bg-black/5 px-1 rounded">POST /api/seed</code> to create demo logins (e.g. staff@nyc.com / password).
         </p>
       </div>
     </div>

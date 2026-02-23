@@ -13,11 +13,17 @@ export default function StaffSignup() {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSignup = async (e: React.FormEvent) => {
     e?.preventDefault?.();
+    setError('');
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match');
+      setError('Passwords do not match');
+      return;
+    }
+    if (!form.location_id) {
+      setError('Please select your location (NYC or Boston)');
       return;
     }
     setLoading(true);
@@ -27,7 +33,7 @@ export default function StaffSignup() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: form.email,
+          email: form.email.trim(),
           password: form.password,
           location_id: form.location_id,
         }),
@@ -37,7 +43,7 @@ export default function StaffSignup() {
         setSuccess(true);
         setForm({ email: '', password: '', confirmPassword: '', location_id: '' });
       } else {
-        alert(data.error || 'Something went wrong');
+        setError(data.error || 'Something went wrong');
       }
     } finally {
       setLoading(false);
@@ -101,13 +107,19 @@ export default function StaffSignup() {
           <select
             value={form.location_id}
             onChange={(e) => setForm({ ...form, location_id: e.target.value })}
-            className="w-full p-3 mb-6 border border-[var(--card-border)] rounded-md bg-white text-[var(--foreground)] focus:border-[var(--photoism-black)] transition-colors"
+            className="w-full p-3 mb-3 border border-[var(--card-border)] rounded-md bg-white text-[var(--foreground)] focus:border-[var(--photoism-black)] transition-colors"
             required
+            aria-label="Location"
           >
             <option value="">Select your location</option>
             <option value="nyc">Kpop Nara NYC</option>
             <option value="boston">Kpop Nara Boston</option>
           </select>
+          {error && (
+            <p className="mb-4 text-sm text-red-600" role="alert">
+              {error}
+            </p>
+          )}
           <button
             type="submit"
             disabled={loading}
