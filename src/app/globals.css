@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  /* Photoism: black & white */
+  --photoism-black: #0a0a0a;
+  --photoism-white: #ffffff;
+  /* Kpop Nara: purple */
+  --kpop-purple: #6B21A8;
+  --kpop-purple-hover: #581c87;
+  --kpop-purple-soft: #f3e8ff;
+  /* UI */
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-border: #e5e5e5;
+  --muted: #737373;
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+  --radius: 0.5rem;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+input:focus, button:focus-visible {
+  outline: 2px solid var(--photoism-black);
+  outline-offset: 2px;
+}
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0));
+}
