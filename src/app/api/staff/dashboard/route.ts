@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   if (activeSession && queue.length) {
     const activeEntry = queue.find(e => e._id.toString() === activeSession.queue_entry_id);
     if (activeEntry) {
-      activeSessionWithName = { ...activeSession, name: activeEntry.name, pronouns: activeEntry.pronouns };
+      activeSessionWithName = { ...activeSession, name: activeEntry.name, pronouns: activeEntry.pronouns ?? undefined };
     }
   }
 

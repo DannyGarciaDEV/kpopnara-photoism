@@ -1,10 +1,19 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/mongodb';
 import Location from '@/lib/models/Location';
 import StaffUser from '@/lib/models/StaffUser';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  // In production, require a secret header so only you can run seed
+  if (process.env.NODE_ENV === 'production') {
+    const secret = request.headers.get('x-seed-secret');
+    const expected = process.env.SEED_SECRET;
+    if (!expected || secret !== expected) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  }
+
   await dbConnect();
 
   // Seed locations
