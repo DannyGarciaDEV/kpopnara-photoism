@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'zh' | 'hi' | 'vi' | 'es';
+export type Locale = 'en' | 'zh' | 'hi' | 'vi' | 'es' | 'kr';
 
 export const localeNames: Record<Locale, string> = {
   en: 'English',
@@ -6,6 +6,7 @@ export const localeNames: Record<Locale, string> = {
   hi: 'हिन्दी',
   vi: 'Tiếng Việt',
   es: 'Español',
+  kr: '한국어',
 };
 
 export const translations: Record<Locale, Record<string, string>> = {
@@ -28,6 +29,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     sessionEnded: 'Your session has ended',
     thankYou: 'Thank you for using Photoism!',
     close: 'Close',
+    seeAllFrames: 'See all Photoism frames on Instagram',
   },
   zh: {
     joinTitle: '在此加入排队',
@@ -48,6 +50,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     sessionEnded: '您的体验已结束',
     thankYou: '感谢使用 Photoism！',
     close: '关闭',
+    seeAllFrames: '在 Instagram 查看所有 Photoism 相框',
   },
   hi: {
     joinTitle: 'यहाँ कतार में शामिल हों',
@@ -68,6 +71,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     sessionEnded: 'आपका सत्र समाप्त हो गया',
     thankYou: 'Photoism इस्तेमाल करने के लिए धन्यवाद!',
     close: 'बंद करें',
+    seeAllFrames: 'Instagram पर सभी Photoism फ्रेम देखें',
   },
   vi: {
     joinTitle: 'Tham gia hàng chờ tại',
@@ -88,6 +92,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     sessionEnded: 'Phiên của bạn đã kết thúc',
     thankYou: 'Cảm ơn bạn đã sử dụng Photoism!',
     close: 'Đóng',
+    seeAllFrames: 'Xem tất cả khung Photoism trên Instagram',
   },
   es: {
     joinTitle: 'Únete a la fila en',
@@ -108,6 +113,28 @@ export const translations: Record<Locale, Record<string, string>> = {
     sessionEnded: 'Tu sesión ha terminado',
     thankYou: '¡Gracias por usar Photoism!',
     close: 'Cerrar',
+    seeAllFrames: 'Ver todos los marcos de Photoism en Instagram',
+  },
+  kr: {
+    joinTitle: '대기열에 참가하기',
+    yourName: '이름',
+    pronounsOptional: '대명사 (선택)',
+    joinQueue: '대기열 참가',
+    joining: '참가 중...',
+    inLine: '대기 중입니다',
+    estimatedWait: '예상 대기 시간',
+    min: '분',
+    keepPageOpen: '이 페이지를 열어 두세요 — 순서가 되면 여기에 표시됩니다.',
+    sessionActive: '세션이 시작되었습니다!',
+    headToBooth: '부스로 가서 즐기세요 ✨',
+    howToUsePhotoism: 'Photoism 사용 방법',
+    youreNext: '다음 순서입니다!',
+    returnToBooth: '부스로 돌아와 주세요.',
+    staffWillStart: '스태프가 세션을 시작합니다 — 이 화면에 카운트다운이 표시됩니다.',
+    sessionEnded: '세션이 종료되었습니다',
+    thankYou: 'Photoism을 이용해 주셔서 감사합니다!',
+    close: '닫기',
+    seeAllFrames: 'Instagram에서 모든 Photoism 프레임 보기',
   },
 };
 

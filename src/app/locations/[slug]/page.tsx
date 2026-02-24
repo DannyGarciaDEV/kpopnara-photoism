@@ -8,7 +8,9 @@ import { type Locale, localeNames, getT } from './translations';
 const STEPS_URL = '/steps.png';
 
 const LOCALE_KEY = 'photoism-locale';
-const LOCALES: Locale[] = ['en', 'zh', 'hi', 'vi', 'es'];
+const LOCALES: Locale[] = ['en', 'zh', 'hi', 'vi', 'es', 'kr'];
+
+const PHOTOISM_INSTAGRAM = 'https://www.instagram.com/photoism.global/';
 
 function getStoredLocale(): Locale {
   if (typeof window === 'undefined') return 'en';
@@ -110,7 +112,8 @@ export default function LocationPage() {
   if (joined && status) {
     const isActive = status.status === 'active' && status.countdown != null && status.countdown > 0;
     const isNotified = status.status === 'notified';
-    const showSteps = isActive || isNotified;
+    const isWaiting = status.status === 'waiting';
+    const showSteps = isActive || isNotified || isWaiting;
     const mins = isActive ? Math.floor(status.countdown / 60) : 0;
     const secs = isActive ? status.countdown % 60 : 0;
 
@@ -140,9 +143,17 @@ export default function LocationPage() {
                 <span className="text-2xl leading-none">×</span>
               </button>
             </div>
-            <div className="p-4 flex items-center justify-center">
+            <div className="p-4 flex flex-col items-center justify-center gap-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={STEPS_URL} alt={title} className="max-h-[55vh] w-auto max-w-full object-contain rounded-lg" />
+              <a
+                href={PHOTOISM_INSTAGRAM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-[var(--kpop-purple)] hover:underline"
+              >
+                {t('seeAllFrames')}
+              </a>
             </div>
           </div>
         </div>
@@ -218,8 +229,17 @@ export default function LocationPage() {
                   #{status.position}
                 </div>
                 <p className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-1">{t('inLine')}</p>
-                <p className="text-[var(--muted)] text-sm sm:text-base mb-4">{t('estimatedWait')}: ~{Math.max(1, status.position * 5)} {t('min')}</p>
-                <p className="text-xs sm:text-sm text-[var(--muted)]">{t('keepPageOpen')}</p>
+                <p className="text-[var(--muted)] text-sm sm:text-base mb-4">{t('estimatedWait')}: ~{Math.max(1, status.position * 7)} {t('min')}</p>
+                <p className="text-xs sm:text-sm text-[var(--muted)] mb-4">{t('keepPageOpen')}</p>
+                {showSteps && (
+                  <button
+                    type="button"
+                    onClick={() => setImageOverlay(true)}
+                    className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-[44px] px-4 py-3 rounded-md border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] font-semibold text-sm sm:text-base hover:bg-[var(--photoism-black)] hover:text-white transition-colors"
+                  >
+                    {t('howToUsePhotoism')}
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -231,6 +251,7 @@ export default function LocationPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 safe-area-pb bg-[var(--background)]">
       <div className="bg-white border border-[var(--card-border)] rounded-md p-5 sm:p-8 shadow-[var(--shadow)] w-full max-w-md mx-auto">
+        <LangSelector />
         <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={56} height={56} className="mx-auto mb-2 sm:mb-4" />
         <p className="text-xs sm:text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider mb-1 text-center">Photoism</p>
         <h1 className="text-xl sm:text-2xl font-bold text-center text-[var(--kpop-purple)] mb-4 sm:mb-6">{t('joinTitle')} {locationName}</h1>
@@ -259,6 +280,11 @@ export default function LocationPage() {
         >
           {loading ? t('joining') : t('joinQueue')}
         </button>
+        <p className="mt-4 text-center text-xs text-[var(--muted)]">
+          <a href={PHOTOISM_INSTAGRAM} target="_blank" rel="noopener noreferrer" className="text-[var(--kpop-purple)] font-semibold hover:underline">
+            {t('seeAllFrames')}
+          </a>
+        </p>
       </div>
     </div>
   );

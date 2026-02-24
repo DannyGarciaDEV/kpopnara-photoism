@@ -1,11 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 pb-safe bg-[var(--background)]">
       <div className="text-center max-w-md w-full">
-        <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={130} height={130} className="mx-auto mb-4 w-[130px] h-[130px] sm:w-[160px] sm:h-[160px]" priority />
         <h1 className="text-3xl sm:text-4xl font-bold text-[var(--kpop-purple)] mb-1">Kpop Nara</h1>
         <p className="text-base sm:text-lg font-semibold text-[var(--photoism-black)] mb-6 sm:mb-8">Photoism Queue</p>
         <p className="text-sm sm:text-base text-[var(--muted)] mb-6 sm:mb-8 px-2">
@@ -25,9 +23,6 @@ export default function Home() {
             Boston queue
           </Link>
         </div>
-        <p className="mt-8 text-sm text-[var(--muted)]">
-          Staff? <Link href="/staff/login" className="font-semibold text-[var(--kpop-purple)] hover:underline">Log in</Link>
-        </p>
       </div>
     </div>
   );
