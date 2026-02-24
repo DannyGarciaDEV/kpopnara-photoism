@@ -7,6 +7,14 @@ export default function StaffLogin() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const copySignupLink = () => {
+    const url = window.location.origin + '/staff/signup';
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e?.preventDefault?.();
@@ -78,8 +86,15 @@ export default function StaffLogin() {
             Create one
           </a>
         </p>
-        <p className="mt-2 text-center text-xs text-[var(--muted)]">
-          After first deploy, run <code className="bg-black/5 px-1 rounded">POST /api/seed</code> to create demo logins (e.g. staff@nyc.com / password).
+        <p className="mt-3 text-center text-xs text-[var(--muted)]">
+          Send new staff this link to create an account:{' '}
+          <button
+            type="button"
+            onClick={copySignupLink}
+            className="font-semibold text-[var(--kpop-purple)] hover:underline"
+          >
+            {copied ? 'Copied!' : 'Copy signup link'}
+          </button>
         </p>
       </div>
     </div>
