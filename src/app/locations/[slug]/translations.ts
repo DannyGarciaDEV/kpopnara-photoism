@@ -42,6 +42,9 @@ export const translations: Record<Locale, Record<string, string>> = {
     queueOptionsIntro: 'Need to change your plans?',
     youLeftQueue: 'You left the queue',
     leftQueueMessage: 'You removed yourself from the line. You can get a new spot anytime below.',
+    currentStatus: 'Current status',
+    statusBooth: 'Go to booth now',
+    statusLine: 'Please wait in line',
   },
   zh: {
     joinTitle: '在此加入排队',

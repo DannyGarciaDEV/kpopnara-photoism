@@ -114,6 +114,7 @@ export default function StaffDashboardLocation() {
   }
 
   const activeSession = data?.activeSession;
+  const nextUp = data?.nextUp;
   const queue = data?.queue ?? [];
   const locationName = data?.location?.name ?? 'Kpop Nara';
   const locationId = data?.location?.id ?? 'nyc';
@@ -146,10 +147,15 @@ export default function StaffDashboardLocation() {
         <h2 className="text-base sm:text-lg font-bold text-[var(--foreground)] mb-3 sm:mb-4">Active session</h2>
         {activeSession ? (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
+            <div className="space-y-2">
               <p className="font-bold text-[var(--foreground)]">{activeSession.name}</p>
               {activeSession.pronouns && (
                 <p className="text-sm text-[var(--muted)]">{activeSession.pronouns}</p>
+              )}
+              {nextUp && (
+                <p className="text-sm font-semibold text-[var(--kpop-purple)]">
+                  Next to go: #{nextUp.position} {nextUp.name}
+                </p>
               )}
             </div>
             <div className="flex items-center gap-4">
@@ -165,7 +171,14 @@ export default function StaffDashboardLocation() {
             </div>
           </div>
         ) : (
-          <p className="text-[var(--muted)]">No active session</p>
+          <div className="space-y-1">
+            <p className="text-[var(--muted)]">No active session</p>
+            {nextUp && (
+              <p className="text-sm font-semibold text-[var(--kpop-purple)]">
+                Next to go: #{nextUp.position} {nextUp.name}
+              </p>
+            )}
+          </div>
         )}
       </section>
 

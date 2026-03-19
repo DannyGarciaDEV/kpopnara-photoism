@@ -33,10 +33,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     };
   }
 
-  // Next up: first in line (waiting or notified) — the person staff will call next
-  const firstInLine = queue[0];
-  const nextUp = firstInLine
-    ? { name: firstInLine.name, position: firstInLine.position }
+  // Next up: someone waiting/notified (never the active booth user)
+  const nextEntry = queue.find(e => e.status === 'notified') ?? queue.find(e => e.status === 'waiting');
+  const nextUp = nextEntry
+    ? { name: nextEntry.name, position: nextEntry.position }
     : null;
 
   const queueList = queue.map(e => ({

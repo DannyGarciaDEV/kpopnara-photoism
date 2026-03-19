@@ -303,6 +303,9 @@ export default function LocationPage() {
 
             {isActive ? (
               <>
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[var(--kpop-purple)] mb-2">
+                  {t('currentStatus')}: {t('statusBooth')}
+                </p>
                 <p className="text-base sm:text-lg font-semibold text-[var(--foreground)] mb-2">{t('sessionActive')}</p>
                 <div className="inline-flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[var(--photoism-black)] text-2xl sm:text-3xl font-bold text-[var(--photoism-black)] mb-4 sm:mb-6 tabular-nums">
                   {mins}:{secs.toString().padStart(2, '0')}
@@ -320,6 +323,9 @@ export default function LocationPage() {
               </>
             ) : isNotified ? (
               <>
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[var(--photoism-black)] mb-2">
+                  {t('currentStatus')}: {t('statusLine')}
+                </p>
                 <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] mb-4">
                   <span className="text-3xl sm:text-4xl font-bold">✓</span>
                 </div>
@@ -338,6 +344,9 @@ export default function LocationPage() {
               </>
             ) : isFirstNoActive ? (
               <>
+                <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[var(--photoism-black)] mb-2">
+                  {t('currentStatus')}: {t('statusLine')}
+                </p>
                 <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-md border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] text-3xl sm:text-4xl font-bold mb-4">
                   #{status.position}
                 </div>

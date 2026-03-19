@@ -56,9 +56,20 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Who should go after the current booth user (or first in line if no active session)
+  const nextUpEntry = queue.find(e => e.status === 'notified') ?? queue.find(e => e.status === 'waiting') ?? null;
+
   return NextResponse.json({
     location: location ? { id: location.id, name: location.name } : null,
     queue: queueData,
     activeSession: activeSessionWithName,
+    nextUp: nextUpEntry
+      ? {
+          id: nextUpEntry._id.toString(),
+          position: nextUpEntry.position,
+          name: nextUpEntry.name,
+          pronouns: nextUpEntry.pronouns ?? undefined,
+        }
+      : null,
   });
 }
