@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Location from '@/lib/models/Location';
 import QueueEntry from '@/lib/models/QueueEntry';
+import { estimateWaitForNewJoin } from '@/lib/estimate-queue-wait';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   await dbConnect();
@@ -42,6 +43,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   });
   const position = countToday + 1;
 
+  // Before this person exists in DB: everyone currently in line is ahead
+  const estimatedWait = await estimateWaitForNewJoin(slug);
+
   const queueEntry = new QueueEntry({
     location_id: slug,
     name: name.trim(),
@@ -51,9 +55,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   });
 
   await queueEntry.save();
-
-  // Estimated wait: assume 5 min per person, but since sessions are 5 min, and one at a time, wait = position * 5 min
-  const estimatedWait = position * 5; // minutes
 
   return NextResponse.json({
     id: queueEntry._id.toString(),

@@ -279,7 +279,11 @@ export default function LocationPage() {
                   #{status.position}
                 </div>
                 <p className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-1">{t('inLine')}</p>
-                <p className="text-[var(--muted)] text-sm sm:text-base mb-4">{t('estimatedWait')}: ~{Math.max(1, status.position * 7)} {t('min')}</p>
+                <p className="text-[var(--muted)] text-sm sm:text-base mb-4">
+                  {t('estimatedWait')}: ~
+                  {typeof status.estimatedWaitMinutes === 'number' ? status.estimatedWaitMinutes : Math.max(0, (status.position ?? 1) - 1) * 10}{' '}
+                  {t('min')}
+                </p>
                 <p className="text-xs sm:text-sm text-[var(--muted)] mb-4">{t('keepPageOpen')}</p>
                 {showSteps && (
                   <button

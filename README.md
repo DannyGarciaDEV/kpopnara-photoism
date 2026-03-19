@@ -6,7 +6,7 @@ A digital queue and timer management system for Photoism booths at Kpop Nara loc
 
 - Customer queue joining via QR code (name + pronouns; phone optional)
 - Real-time queue status (polling)
-- “You’re next” and 5-minute timed sessions
+- “You’re next” and 10-minute timed sessions
 - Staff dashboard for queue management
 - Multi-location support (NYC, Boston)
 

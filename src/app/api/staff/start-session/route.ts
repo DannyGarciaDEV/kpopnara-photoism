@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   await entry.save();
 
   const startTime = new Date();
-  const endTime = new Date(startTime.getTime() + 7 * 60 * 1000); // 7 minutes
+  const endTime = new Date(startTime.getTime() + 10 * 60 * 1000); // 10 minutes
 
   const session = new Session({
     location_id,

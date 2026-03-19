@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import QueueEntry from '@/lib/models/QueueEntry';
 import Session from '@/lib/models/Session';
+import { estimateWaitForEntry } from '@/lib/estimate-queue-wait';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   await dbConnect();
@@ -35,10 +36,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const isFirstInQueue = activeEntries[0]?._id.toString() === id;
   const isFirstInLineNoActiveSession = !hasActiveSession && isFirstInQueue && (entry.status === 'waiting' || entry.status === 'notified');
 
+  const estimatedWaitMinutes =
+    entry.status === 'waiting' || entry.status === 'notified'
+      ? await estimateWaitForEntry(slug, id)
+      : 0;
+
   return NextResponse.json({
     status: entry.status,
     position: entry.position,
     countdown,
     isFirstInLineNoActiveSession: !!isFirstInLineNoActiveSession,
+    estimatedWaitMinutes,
   });
 }
