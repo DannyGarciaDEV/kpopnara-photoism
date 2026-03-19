@@ -86,15 +86,29 @@ export default function StaffDashboard() {
   const activeSession = data?.activeSession;
   const queue = data?.queue ?? [];
   const locationName = data?.location?.name ?? 'Kpop Nara';
+  const locationId = data?.location?.id ?? 'nyc';
+
+  const openQueueDisplay = () => {
+    window.open(`/locations/${locationId}/display`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8 pb-safe bg-[var(--background)]">
-      <header className="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
-        <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={40} height={40} className="sm:w-12 sm:h-12 shrink-0" />
-        <div className="min-w-0">
-          <p className="text-xs sm:text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider">Staff</p>
-          <h1 className="text-xl sm:text-3xl font-bold text-[var(--kpop-purple)] truncate">{locationName} Dashboard</h1>
+      <header className="mb-6 sm:mb-8 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={40} height={40} className="sm:w-12 sm:h-12 shrink-0" />
+          <div className="min-w-0">
+            <p className="text-xs sm:text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider">Staff</p>
+            <h1 className="text-xl sm:text-3xl font-bold text-[var(--kpop-purple)] truncate">{locationName} Dashboard</h1>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={openQueueDisplay}
+          className="shrink-0 min-h-[44px] px-4 py-2 rounded-md bg-[var(--kpop-purple)] hover:opacity-90 text-white font-semibold text-sm sm:text-base transition-opacity"
+        >
+          Show queue display
+        </button>
       </header>
 
       {/* Active Session */}

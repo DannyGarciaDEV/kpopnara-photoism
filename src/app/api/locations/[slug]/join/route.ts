@@ -33,9 +33,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
   }
 
-  // Find the max position for this location
-  const maxPosition = await QueueEntry.findOne({ location_id: slug }).sort({ position: -1 }).select('position');
-  const position = maxPosition ? maxPosition.position + 1 : 1;
+  // Queue numbers reset each day: position = 1, 2, 3... for everyone who joins today
+  const startOfToday = new Date();
+  startOfToday.setUTCHours(0, 0, 0, 0);
+  const countToday = await QueueEntry.countDocuments({
+    location_id: slug,
+    created_at: { $gte: startOfToday },
+  });
+  const position = countToday + 1;
 
   const queueEntry = new QueueEntry({
     location_id: slug,

@@ -27,14 +27,17 @@ export async function POST(request: NextRequest) {
   }
 
   // Ensure location exists
+  const locationNames: Record<string, { name: string; city: string }> = {
+    nyc: { name: 'Kpop Nara NYC', city: 'New York' },
+    boston: { name: 'Kpop Nara Boston', city: 'Boston' },
+  };
   const location = await Location.findOne({ id: location_id });
-  if (!location) {
+  if (!location && locationNames[location_id]) {
     await Location.findOneAndUpdate(
       { id: location_id },
       {
         id: location_id,
-        name: location_id === 'nyc' ? 'Kpop Nara NYC' : 'Kpop Nara Boston',
-        city: location_id === 'nyc' ? 'New York' : 'Boston',
+        ...locationNames[location_id],
         is_active: true,
       },
       { upsert: true }

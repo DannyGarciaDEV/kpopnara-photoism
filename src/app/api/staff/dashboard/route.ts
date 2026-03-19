@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json({
-    location: location ? { name: location.name } : null,
+    location: location ? { id: location.id, name: location.name } : null,
     queue: queueData,
     activeSession: activeSessionWithName,
   });

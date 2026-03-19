@@ -7,12 +7,12 @@ export default function StaffLogin() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<string | false>(false);
 
-  const copySignupLink = () => {
-    const url = window.location.origin + '/staff/signup';
+  const copySignupLink = (location: 'nyc' | 'boston') => {
+    const url = `${window.location.origin}/staff/${location}/signup`;
     navigator.clipboard.writeText(url);
-    setCopied(true);
+    setCopied(location);
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -82,18 +82,26 @@ export default function StaffLogin() {
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
           Don&apos;t have an account?{' '}
-          <a href="/staff/signup" className="font-semibold text-[var(--kpop-purple)] hover:underline">
-            Create one
-          </a>
+          <a href="/staff/nyc/signup" className="font-semibold text-[var(--kpop-purple)] hover:underline">NYC signup</a>
+          {' · '}
+          <a href="/staff/boston/signup" className="font-semibold text-[var(--kpop-purple)] hover:underline">Boston signup</a>
         </p>
         <p className="mt-3 text-center text-xs text-[var(--muted)]">
-          Send new staff this link to create an account:{' '}
+          Copy signup link for new staff:{' '}
           <button
             type="button"
-            onClick={copySignupLink}
+            onClick={() => copySignupLink('nyc')}
             className="font-semibold text-[var(--kpop-purple)] hover:underline"
           >
-            {copied ? 'Copied!' : 'Copy signup link'}
+            {copied === 'nyc' ? 'Copied!' : 'NYC'}
+          </button>
+          {' · '}
+          <button
+            type="button"
+            onClick={() => copySignupLink('boston')}
+            className="font-semibold text-[var(--kpop-purple)] hover:underline"
+          >
+            {copied === 'boston' ? 'Copied!' : 'Boston'}
           </button>
         </p>
       </div>

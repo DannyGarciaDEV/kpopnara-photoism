@@ -30,6 +30,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: 'Thank you for using Photoism!',
     close: 'Close',
     seeAllFrames: 'See all Photoism frames on Instagram',
+    youWereSkipped: "You were skipped",
+    skippedMessage: "Staff skipped your turn. You can rejoin the queue below if you'd like to try again.",
+    showStaffToStart: 'Show staff to start your time in the booth.',
+    rejoinQueue: 'Rejoin queue',
   },
   zh: {
     joinTitle: '在此加入排队',
@@ -51,6 +55,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: '感谢使用 Photoism！',
     close: '关闭',
     seeAllFrames: '在 Instagram 查看所有 Photoism 相框',
+    youWereSkipped: '您被跳过了',
+    skippedMessage: '工作人员跳过了您的顺序。如需可重新加入排队。',
+    showStaffToStart: '请向工作人员示意以开始您的体验。',
+    rejoinQueue: '重新排队',
   },
   hi: {
     joinTitle: 'यहाँ कतार में शामिल हों',
@@ -72,6 +80,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: 'Photoism इस्तेमाल करने के लिए धन्यवाद!',
     close: 'बंद करें',
     seeAllFrames: 'Instagram पर सभी Photoism फ्रेम देखें',
+    youWereSkipped: 'आपको छोड़ दिया गया',
+    skippedMessage: 'स्टाफ ने आपकी बारी छोड़ दी। चाहें तो नीचे फिर से कतार में जुड़ सकते हैं।',
+    showStaffToStart: 'बूथ में अपना समय शुरू करने के लिए स्टाफ को दिखाएं।',
+    rejoinQueue: 'फिर से कतार में जुड़ें',
   },
   vi: {
     joinTitle: 'Tham gia hàng chờ tại',
@@ -93,6 +105,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: 'Cảm ơn bạn đã sử dụng Photoism!',
     close: 'Đóng',
     seeAllFrames: 'Xem tất cả khung Photoism trên Instagram',
+    youWereSkipped: 'Bạn đã bị bỏ qua',
+    skippedMessage: 'Nhân viên đã bỏ qua lượt của bạn. Bạn có thể tham gia lại hàng chờ bên dưới nếu muốn.',
+    showStaffToStart: 'Cho nhân viên thấy để bắt đầu thời gian của bạn trong booth.',
+    rejoinQueue: 'Vào lại hàng chờ',
   },
   es: {
     joinTitle: 'Únete a la fila en',
@@ -114,6 +130,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: '¡Gracias por usar Photoism!',
     close: 'Cerrar',
     seeAllFrames: 'Ver todos los marcos de Photoism en Instagram',
+    youWereSkipped: 'Te saltaron el turno',
+    skippedMessage: 'El personal saltó tu turno. Puedes volver a unirte a la fila abajo si quieres intentarlo de nuevo.',
+    showStaffToStart: 'Avísale al personal para que empiece tu tiempo en la cabina.',
+    rejoinQueue: 'Volver a la fila',
   },
   kr: {
     joinTitle: '대기열에 참가하기',
@@ -135,6 +155,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     thankYou: 'Photoism을 이용해 주셔서 감사합니다!',
     close: '닫기',
     seeAllFrames: 'Instagram에서 모든 Photoism 프레임 보기',
+    youWereSkipped: '순서가 건너뛰어졌습니다',
+    skippedMessage: '스태프가 순서를 건너뛰었습니다. 다시 참가하려면 아래에서 대기열에 다시 참가하세요.',
+    showStaffToStart: '부스에서 시간을 시작하려면 스태프에게 보여주세요.',
+    rejoinQueue: '다시 대기열 참가',
   },
 };
 

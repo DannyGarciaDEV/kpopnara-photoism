@@ -113,9 +113,17 @@ export default function LocationPage() {
     const isActive = status.status === 'active' && status.countdown != null && status.countdown > 0;
     const isNotified = status.status === 'notified';
     const isWaiting = status.status === 'waiting';
+    const isSkipped = status.status === 'no_show';
+    const isFirstNoActive = status.isFirstInLineNoActiveSession === true;
     const showSteps = isActive || isNotified || isWaiting;
     const mins = isActive ? Math.floor(status.countdown / 60) : 0;
     const secs = isActive ? status.countdown % 60 : 0;
+
+    const handleRejoin = () => {
+      if (typeof window !== 'undefined') localStorage.removeItem('queueId');
+      setJoined(false);
+      setStatus(null);
+    };
 
     // In-page image widget (steps) with close button
     const ImageOverlay = () => {
@@ -178,6 +186,31 @@ export default function LocationPage() {
       );
     }
 
+    if (isSkipped) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 safe-area-pb bg-[var(--background)]">
+          <div className="bg-white border border-[var(--card-border)] rounded-md p-6 sm:p-8 shadow-[var(--shadow)] text-center max-w-md w-full mx-auto">
+            <LangSelector />
+            <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={56} height={56} className="mx-auto mb-4 sm:mb-6" />
+            <p className="text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider mb-2">Photoism</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-[var(--kpop-purple)] mb-4">{locationName}</h1>
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-[var(--warning)] text-[var(--warning)] mb-4">
+              <span className="text-3xl sm:text-4xl">↻</span>
+            </div>
+            <p className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-2">{t('youWereSkipped')}</p>
+            <p className="text-[var(--muted)] text-sm sm:text-base mb-6">{t('skippedMessage')}</p>
+            <button
+              type="button"
+              onClick={handleRejoin}
+              className="w-full min-h-[48px] bg-[var(--photoism-black)] hover:opacity-90 text-white font-semibold py-3 px-4 rounded-md transition-opacity"
+            >
+              {t('rejoinQueue')}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <>
         <ImageOverlay />
@@ -213,6 +246,23 @@ export default function LocationPage() {
                 <p className="text-lg sm:text-xl font-bold text-[var(--photoism-black)] mb-2">{t('youreNext')}</p>
                 <p className="text-[var(--foreground)] font-semibold text-sm sm:text-base">{t('returnToBooth')}</p>
                 <p className="text-[var(--muted)] text-xs sm:text-sm mt-2 mb-4">{t('staffWillStart')}</p>
+                {showSteps && (
+                  <button
+                    type="button"
+                    onClick={() => setImageOverlay(true)}
+                    className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-[44px] px-4 py-3 rounded-md border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] font-semibold text-sm sm:text-base hover:bg-[var(--photoism-black)] hover:text-white transition-colors"
+                  >
+                    {t('howToUsePhotoism')}
+                  </button>
+                )}
+              </>
+            ) : isFirstNoActive ? (
+              <>
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-md border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] text-3xl sm:text-4xl font-bold mb-4">
+                  #{status.position}
+                </div>
+                <p className="text-lg sm:text-xl font-bold text-[var(--photoism-black)] mb-2">{t('youreNext')}</p>
+                <p className="text-[var(--foreground)] font-semibold text-sm sm:text-base mb-4">{t('showStaffToStart')}</p>
                 {showSteps && (
                   <button
                     type="button"

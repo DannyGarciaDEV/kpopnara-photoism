@@ -8,7 +8,7 @@ A digital queue and timer management system for Photoism booths at Kpop Nara loc
 - Real-time queue status (polling)
 - “You’re next” and 5-minute timed sessions
 - Staff dashboard for queue management
-- Multi-location support (NYC, Boston, etc.)
+- Multi-location support (NYC, Boston)
 
 ## Getting Started
 
@@ -36,7 +36,7 @@ A digital queue and timer management system for Photoism booths at Kpop Nara loc
 ## Usage
 
 - **Customers:** Visit `/locations/nyc` or `/locations/boston` to join the queue.
-- **Staff:** Visit `/staff/login`, then `/staff/dashboard` to manage the queue.
+- **Staff:** Visit `/staff/login`, then `/staff/dashboard` to manage the queue. Signup by location: `/staff/nyc/signup`, `/staff/boston/signup`.
 
 ## Production
 

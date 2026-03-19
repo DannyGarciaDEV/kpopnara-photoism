@@ -29,13 +29,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
   }
 
-  // Recalculate position in case others were removed
+  // Use stored position so dashboard # and customer "in line" # match (resets each day)
   const activeEntries = await QueueEntry.find({ location_id: slug, status: { $in: ['waiting', 'notified', 'active'] } }).sort({ position: 1 });
-  const currentPosition = activeEntries.findIndex(e => e._id.toString() === id) + 1;
+  const hasActiveSession = await Session.exists({ location_id: slug, status: 'active' });
+  const isFirstInQueue = activeEntries[0]?._id.toString() === id;
+  const isFirstInLineNoActiveSession = !hasActiveSession && isFirstInQueue && (entry.status === 'waiting' || entry.status === 'notified');
 
   return NextResponse.json({
     status: entry.status,
-    position: currentPosition,
+    position: entry.position,
     countdown,
+    isFirstInLineNoActiveSession: !!isFirstInLineNoActiveSession,
   });
 }

@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   const staff = [
     { email: 'staff@nyc.com', password: 'password', location_id: 'nyc' },
     { email: 'staff@boston.com', password: 'password', location_id: 'boston' },
-    { email: 'dannygarciadev@gmail.com', password: 'dannycortesxd', location_id: 'boston' },
+    { email: 'dannygarciadev@gmail.com', password: 'dannycortesxd', location_id: 'nyc' },
   ];
 
   for (const s of staff) {
