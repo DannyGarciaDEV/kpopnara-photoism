@@ -29,8 +29,9 @@ export default function StaffLogin() {
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.token) {
         localStorage.setItem('staffToken', data.token);
+        const dashSlug = data.location_id === 'boston' ? 'bos' : 'nyc';
         setTimeout(() => {
-          window.location.replace('/staff/dashboard');
+          window.location.replace(`/staff/dashboard/${dashSlug}`);
         }, 50);
         return;
       }

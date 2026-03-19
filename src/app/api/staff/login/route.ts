@@ -22,5 +22,5 @@ export async function POST(request: NextRequest) {
 
   const token = signToken({ location_id: user.location_id });
 
-  return NextResponse.json({ token });
+  return NextResponse.json({ token, location_id: user.location_id });
 }
