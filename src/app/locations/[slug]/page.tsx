@@ -27,6 +27,8 @@ export default function LocationPage() {
   const [loading, setLoading] = useState(false);
   const [sessionEnded, setSessionEnded] = useState(false);
   const [imageOverlay, setImageOverlay] = useState<boolean>(false);
+  const [leaveLoading, setLeaveLoading] = useState(false);
+  const [deferLoading, setDeferLoading] = useState(false);
   const notifiedRef = useRef(false);
 
   useEffect(() => {
@@ -114,6 +116,7 @@ export default function LocationPage() {
     const isNotified = status.status === 'notified';
     const isWaiting = status.status === 'waiting';
     const isSkipped = status.status === 'no_show';
+    const isCancelled = status.status === 'cancelled';
     const isFirstNoActive = status.isFirstInLineNoActiveSession === true;
     const showSteps = isActive || isNotified || isWaiting;
     const mins = isActive ? Math.floor(status.countdown / 60) : 0;
@@ -124,6 +127,51 @@ export default function LocationPage() {
       setJoined(false);
       setStatus(null);
     };
+
+    const handleLeaveQueue = async () => {
+      const id = typeof window !== 'undefined' ? localStorage.getItem('queueId') : null;
+      const loc = Array.isArray(slug) ? slug[0] : slug;
+      if (!id || !loc) return;
+      setLeaveLoading(true);
+      try {
+        const res = await fetch(`/api/locations/${loc}/leave`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        if (res.ok) {
+          setStatus((s: any) => (s ? { ...s, status: 'cancelled' } : s));
+        }
+      } finally {
+        setLeaveLoading(false);
+      }
+    };
+
+    const handleDeferTurn = async () => {
+      const id = typeof window !== 'undefined' ? localStorage.getItem('queueId') : null;
+      const loc = Array.isArray(slug) ? slug[0] : slug;
+      if (!id || !loc) return;
+      setDeferLoading(true);
+      try {
+        const res = await fetch(`/api/locations/${loc}/defer`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        if (res.ok) {
+          const statusRes = await fetch(`/api/locations/${loc}/status?id=${id}`);
+          if (statusRes.ok) {
+            const data = await statusRes.json();
+            setStatus(data);
+          }
+        }
+      } finally {
+        setDeferLoading(false);
+      }
+    };
+
+    const showGraceNotice = !isSkipped && !isCancelled && !isActive;
+    const showQueueOptions = (isWaiting || isNotified || isFirstNoActive) && !isActive;
 
     // In-page image widget (steps) with close button
     const ImageOverlay = () => {
@@ -201,10 +249,36 @@ export default function LocationPage() {
             <p className="text-[var(--muted)] text-sm sm:text-base mb-6">{t('skippedMessage')}</p>
             <button
               type="button"
+              onClick={handleDeferTurn}
+              disabled={deferLoading}
+              className="w-full min-h-[48px] bg-[var(--photoism-black)] hover:opacity-90 disabled:opacity-60 text-white font-semibold py-3 px-4 rounded-md transition-opacity"
+            >
+              {deferLoading ? '…' : t('deferTurn')}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (isCancelled) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 safe-area-pb bg-[var(--background)]">
+          <div className="bg-white border border-[var(--card-border)] rounded-md p-6 sm:p-8 shadow-[var(--shadow)] text-center max-w-md w-full mx-auto">
+            <LangSelector />
+            <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={56} height={56} className="mx-auto mb-4 sm:mb-6" />
+            <p className="text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider mb-2">Photoism</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-[var(--kpop-purple)] mb-4">{locationName}</h1>
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-[var(--muted)] text-[var(--muted)] mb-4">
+              <span className="text-3xl sm:text-4xl">—</span>
+            </div>
+            <p className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-2">{t('youLeftQueue')}</p>
+            <p className="text-[var(--muted)] text-sm sm:text-base mb-6">{t('leftQueueMessage')}</p>
+            <button
+              type="button"
               onClick={handleRejoin}
               className="w-full min-h-[48px] bg-[var(--photoism-black)] hover:opacity-90 text-white font-semibold py-3 px-4 rounded-md transition-opacity"
             >
-              {t('rejoinQueue')}
+              {t('rejoinNewSpot')}
             </button>
           </div>
         </div>
@@ -220,6 +294,12 @@ export default function LocationPage() {
             <Image src="/kpopnara-logo.png" alt="Kpop Nara" width={56} height={56} className="mx-auto mb-2 sm:mb-4" />
             <p className="text-xs sm:text-sm font-semibold text-[var(--photoism-black)] uppercase tracking-wider mb-1">Photoism</p>
             <h1 className="text-xl sm:text-2xl font-bold text-[var(--kpop-purple)] mb-4 sm:mb-6">{locationName}</h1>
+
+            {showGraceNotice && (
+              <p className="text-left text-xs sm:text-sm text-[var(--foreground)] bg-amber-50 border border-amber-200/80 rounded-md p-3 mb-4 sm:mb-5 leading-relaxed">
+                {t('gracePeriodNotice')}
+              </p>
+            )}
 
             {isActive ? (
               <>
@@ -295,6 +375,30 @@ export default function LocationPage() {
                   </button>
                 )}
               </>
+            )}
+
+            {showQueueOptions && (
+              <div className="mt-6 pt-6 border-t border-[var(--card-border)] text-left">
+                <p className="text-sm font-semibold text-[var(--foreground)] mb-3">{t('queueOptionsIntro')}</p>
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={handleLeaveQueue}
+                    disabled={leaveLoading}
+                    className="w-full min-h-[44px] rounded-md border-2 border-[var(--danger)] text-[var(--danger)] font-semibold text-sm hover:bg-red-50 disabled:opacity-60 transition-colors"
+                  >
+                    {leaveLoading ? '…' : t('removeFromQueue')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeferTurn}
+                    disabled={deferLoading}
+                    className="w-full min-h-[44px] rounded-md border-2 border-[var(--photoism-black)] text-[var(--photoism-black)] font-semibold text-sm hover:bg-[var(--photoism-black)] hover:text-white disabled:opacity-60 transition-colors"
+                  >
+                    {deferLoading ? '…' : t('deferTurn')}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>

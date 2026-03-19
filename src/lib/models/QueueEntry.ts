@@ -5,7 +5,7 @@ const QueueEntrySchema = new mongoose.Schema({
   name: { type: String, required: true },
   pronouns: { type: String },
   phone: { type: String }, // optional - not collected
-  status: { type: String, enum: ['waiting', 'notified', 'active', 'done', 'no_show'], default: 'waiting' },
+  status: { type: String, enum: ['waiting', 'notified', 'active', 'done', 'no_show', 'cancelled'], default: 'waiting' },
   position: { type: Number, required: true },
   notified_at: { type: Date },
   created_at: { type: Date, default: Date.now },
