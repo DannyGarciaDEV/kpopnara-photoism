@@ -10,7 +10,7 @@ const STEPS_URL = '/steps.png';
 const LOCALE_KEY = 'photoism-locale';
 const LOCALES: Locale[] = ['en', 'zh', 'hi', 'vi', 'es', 'kr'];
 
-const PHOTOISM_INSTAGRAM = 'https://www.instagram.com/photoism.us/';
+const PHOTOISM_INSTAGRAM = 'https://www.instagram.com/photoism_us/';
 
 function getStoredLocale(): Locale {
   if (typeof window === 'undefined') return 'en';
