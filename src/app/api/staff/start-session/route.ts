@@ -52,6 +52,18 @@ export async function POST(request: NextRequest) {
   entry.status = 'active';
   await entry.save();
 
+  // If duplicate rows were created for the same person/spot, retire them so staff sees one row.
+  await QueueEntry.updateMany(
+    {
+      _id: { $ne: entry._id },
+      location_id,
+      position: entry.position,
+      status: { $in: ['waiting', 'notified'] },
+      name: { $regex: `^${entry.name.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
+    },
+    { $set: { status: 'cancelled' } }
+  );
+
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 10 * 60 * 1000); // 10 minutes
 

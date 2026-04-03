@@ -37,6 +37,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   // Queue numbers reset each day: position = 1, 2, 3... for everyone who joins today
   const startOfToday = new Date();
   startOfToday.setUTCHours(0, 0, 0, 0);
+
+  const normalizedName = name.trim().toLowerCase();
+  // Prevent duplicate active/in-line entries for the same person on the same day.
+  const existingEntry = await QueueEntry.findOne({
+    location_id: slug,
+    created_at: { $gte: startOfToday },
+    status: { $in: ['waiting', 'notified', 'active'] },
+    name: { $regex: `^${name.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
+  }).sort({ created_at: 1 });
+  if (existingEntry && existingEntry.name.trim().toLowerCase() === normalizedName) {
+    return NextResponse.json({
+      id: existingEntry._id.toString(),
+      position: existingEntry.position,
+      estimatedWait: await estimateWaitForNewJoin(slug),
+      deduped: true,
+    });
+  }
+
   const countToday = await QueueEntry.countDocuments({
     location_id: slug,
     created_at: { $gte: startOfToday },

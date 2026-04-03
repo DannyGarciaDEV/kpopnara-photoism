@@ -5,6 +5,36 @@ import QueueEntry from '@/lib/models/QueueEntry';
 import Session from '@/lib/models/Session';
 import { verifyToken } from '@/lib/auth';
 
+type QueueDoc = {
+  _id: { toString: () => string };
+  position: number;
+  name: string;
+  pronouns?: string;
+  phone?: string;
+  status: 'waiting' | 'notified' | 'active' | 'done' | 'no_show' | 'cancelled';
+};
+
+function dedupeQueue(entries: QueueDoc[]) {
+  const priority: Record<string, number> = { active: 3, notified: 2, waiting: 1 };
+  const byKey = new Map<string, QueueDoc>();
+
+  for (const entry of entries) {
+    const key = `${entry.position}::${entry.name.trim().toLowerCase()}`;
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, entry);
+      continue;
+    }
+    const existingPriority = priority[existing.status] ?? 0;
+    const currentPriority = priority[entry.status] ?? 0;
+    if (currentPriority > existingPriority) {
+      byKey.set(key, entry);
+    }
+  }
+
+  return Array.from(byKey.values()).sort((a, b) => a.position - b.position);
+}
+
 export async function GET(request: NextRequest) {
   await dbConnect();
 
@@ -22,7 +52,8 @@ export async function GET(request: NextRequest) {
   const location_id = payload.location_id;
 
   // Get queue entries
-  const queue = await QueueEntry.find({ location_id, status: { $in: ['waiting', 'notified', 'active'] } }).sort({ position: 1 });
+  const rawQueue = await QueueEntry.find({ location_id, status: { $in: ['waiting', 'notified', 'active'] } }).sort({ position: 1 });
+  const queue = dedupeQueue(rawQueue as unknown as QueueDoc[]);
 
   // Get active session
   let activeSession = null;
@@ -57,7 +88,10 @@ export async function GET(request: NextRequest) {
   }
 
   // Who should go after the current booth user (or first in line if no active session)
-  const nextUpEntry = queue.find(e => e.status === 'notified') ?? queue.find(e => e.status === 'waiting') ?? null;
+  const nextUpEntry =
+    queue.find(e => e.status === 'notified' && e._id.toString() !== activeSession?.queue_entry_id)
+    ?? queue.find(e => e.status === 'waiting' && e._id.toString() !== activeSession?.queue_entry_id)
+    ?? null;
 
   return NextResponse.json({
     location: location ? { id: location.id, name: location.name } : null,
