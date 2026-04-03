@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 const SLUG_TO_LOCATION_ID: Record<string, string> = {
   nyc: 'nyc',
+  boston: 'boston',
   bos: 'boston',
 };
 
@@ -40,8 +41,8 @@ export default function StaffDashboardLocation() {
       const d = await res.json();
       setData(d);
       const apiLocationId = d?.location?.id ?? '';
-      if (apiLocationId === 'boston' && slug !== 'bos') {
-        router.replace('/staff/dashboard/bos');
+      if (apiLocationId === 'boston' && slug !== 'boston') {
+        router.replace('/staff/dashboard/boston');
         return;
       }
       if (apiLocationId === 'nyc' && slug !== 'nyc') {

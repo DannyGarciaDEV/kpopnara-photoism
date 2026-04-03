@@ -15,7 +15,7 @@ export default function StaffDashboardRedirect() {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const locationId = payload?.location_id;
-      const dashSlug = locationId === 'boston' ? 'bos' : 'nyc';
+      const dashSlug = locationId === 'boston' ? 'boston' : 'nyc';
       router.replace(`/staff/dashboard/${dashSlug}`);
     } catch {
       router.replace('/staff/login');
