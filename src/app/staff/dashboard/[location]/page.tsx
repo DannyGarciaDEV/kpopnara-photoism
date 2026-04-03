@@ -7,7 +7,6 @@ import Image from 'next/image';
 const SLUG_TO_LOCATION_ID: Record<string, string> = {
   nyc: 'nyc',
   boston: 'boston',
-  bos: 'boston',
 };
 
 export default function StaffDashboardLocation() {
