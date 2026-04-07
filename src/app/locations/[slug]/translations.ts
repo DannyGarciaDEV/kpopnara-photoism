@@ -43,7 +43,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     youLeftQueue: 'You left the queue',
     leftQueueMessage: 'You removed yourself from the line. You can get a new spot anytime below.',
     currentStatus: 'Current status',
-    statusBooth: 'Go to booth now',
+    statusBooth: 'Follow instructions in the photo booth',
     statusLine: 'Please wait in line',
   },
   zh: {
