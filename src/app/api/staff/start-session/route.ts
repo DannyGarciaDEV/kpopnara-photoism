@@ -29,17 +29,20 @@ export async function POST(request: NextRequest) {
   }
 
   const location_id = payload.location_id;
-  const { queue_entry_id } = await request.json();
+  const body = await request.json().catch(() => ({}));
+  const queue_entry_id = typeof body?.queue_entry_id === 'string' ? body.queue_entry_id : '';
 
   if (!queue_entry_id) {
     return NextResponse.json({ error: 'Queue entry ID is required' }, { status: 400 });
   }
 
   const entry = await QueueEntry.findById(queue_entry_id);
-  if (!entry || entry.location_id !== location_id) {
+  if (!entry || String(entry.location_id) !== location_id) {
     return NextResponse.json({ error: 'Invalid queue entry' }, { status: 400 });
   }
-  if (entry.status !== 'waiting' && entry.status !== 'notified') {
+
+  // Some legacy rows can remain "active" after old flow failures; allow starting in this case.
+  if (entry.status !== 'waiting' && entry.status !== 'notified' && entry.status !== 'active') {
     return NextResponse.json({ error: 'Only the next person in line can start a session' }, { status: 400 });
   }
 
@@ -49,17 +52,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'There is already an active session' }, { status: 400 });
   }
 
-  entry.status = 'active';
-  await entry.save();
+  if (entry.status !== 'active') {
+    entry.status = 'active';
+    await entry.save();
+  }
 
   // If duplicate rows were created for the same person/spot, retire them so staff sees one row.
+  const safeName = typeof entry.name === 'string' ? entry.name.trim() : '';
   await QueueEntry.updateMany(
     {
       _id: { $ne: entry._id },
       location_id,
       position: entry.position,
       status: { $in: ['waiting', 'notified'] },
-      name: { $regex: `^${entry.name.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
+      name: { $regex: `^${safeName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
     },
     { $set: { status: 'cancelled' } }
   );
